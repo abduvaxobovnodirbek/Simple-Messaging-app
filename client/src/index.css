@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0%;
+  padding: 0%;
+}
+
+.ant-input-group-addon {
+  display: none !important;
+}
+
+.ant-input {
+  background-color: #8392a592 !important;
+  border: 1px solid #54749d92 !important;
+  color: black !important;
+  border-radius: 15px !important;
+}
+
+.ant-input::placeholder {
+  color: rgba(57, 55, 55, 0.612) !important;
+}
+
+.ant-input-search-button {
+  background-color: #216ac3 !important;
+  display: none !important;
+}
+
+.ant-form-item-explain-error {
+  color: red !important;
+}

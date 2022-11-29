@@ -1,44 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AutoComplete, Input } from "antd";
+import Cookies from "universal-cookie";
 
-const searchResult = (query) =>
-  [1, 2, 3, 4, 5]
-    .join(".")
-    .split(".")
-    .map((_, idx) => {
-      const category = `${query}${idx}`;
-      return {
-        value: category,
-        label: (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <span>
-              Found {query} on{" "}
-              <a
-                href={`https://s.taobao.com/search?q=${query}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {category}
-              </a>
-            </span>
-          </div>
-        ),
-      };
-    });
+const searchResult = (data) =>
+  data.map((user) => ({ value: `${user.username}` }));
 
-const Searchbar = () => {
+const Searchbar = ({ recipient, setRecipient, socket, setUser }) => {
   const [options, setOptions] = useState([]);
+  const cookies = new Cookies();
+
+  useEffect(() => {
+    socket.on("getAllUsers", (data) => {
+      setOptions(data ? searchResult(data) : []);
+    });
+    socket.on("showSentMessages", (data) => {
+      setUser(data);
+    });
+    return () => {
+      socket.off("getAllUsers");
+      socket.off("findUser");
+    };
+  });
+
   const handleSearch = (value) => {
-    setOptions(value ? searchResult(value) : []);
+    socket.emit("getAllUsers", value);
+    socket.emit("showSentMessages", value, cookies.get("username_task7"));
   };
+
   const onSelect = (value) => {
-    console.log("onSelect", value);
+    socket.emit("showSentMessages", value, cookies.get("username_task7"));
+    setRecipient(value);
   };
+
   return (
     <AutoComplete
       dropdownMatchSelectWidth={252}
@@ -50,6 +43,9 @@ const Searchbar = () => {
     >
       <Input.Search
         size="large"
+        required={true}
+        value={recipient}
+        onChange={(e) => setRecipient(e.target.value)}
         placeholder="enter recipient name"
         enterButton
       />

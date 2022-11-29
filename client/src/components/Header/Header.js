@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt } from "react-icons/fa";
 import Cookie from "universal-cookie";
 import gmail from "../../assets/gmail.png";
+import UserAvatar from "../Avatar/UserAvatar";
 
 const cookie = new Cookie();
 
@@ -25,14 +26,20 @@ const Header = () => {
             </NavLink>
           </>
         ) : (
-          <NavLink
-            to={"/login"}
-            onClick={() => cookie.remove("username_task7")}
-            className={"text-white font-bold mr-2 flex items-center"}
-          >
-            <FaSignOutAlt className="mr-2" />
-            Logout
-          </NavLink>
+          <>
+            <UserAvatar />
+            <NavLink
+              to={"/login"}
+              onClick={() => {
+                cookie.remove("username_task7");
+                cookie.remove("user_id_task7");
+              }}
+              className={"text-white font-bold mr-2 flex items-center"}
+            >
+              <FaSignOutAlt className="mr-2" />
+              Logout
+            </NavLink>
+          </>
         )}
       </span>
     </nav>

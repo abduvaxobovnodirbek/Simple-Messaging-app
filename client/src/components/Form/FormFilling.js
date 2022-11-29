@@ -3,7 +3,12 @@ import { Form, Formik, Field } from "formik";
 import * as Yup from "yup";
 import { FaUser } from "react-icons/fa";
 import { Spin } from "antd";
-import Cookies from "universal-cookie";
+import { useDispatch } from "react-redux";
+import {
+  successNotification,
+  errorNotification,
+} from "../../Helpers/notification";
+import { postUserInfo } from "../../redux/users/user";
 
 let validationSchema = Yup.object({
   username: Yup.string().required("*username field is required"),
@@ -12,12 +17,22 @@ let validationSchema = Yup.object({
 const FormFilling = () => {
   const initialValues = { username: "" };
   const navigate = useNavigate();
-  const cookie = new Cookies();
+  const dispatch = useDispatch();
 
   const handleSubmit = (data, { resetForm }) => {
-    cookie.set("username_task7", data.username);
-    resetForm();
-    navigate("/");
+    dispatch(postUserInfo(data))
+      .unwrap()
+      .then(() => {
+        successNotification("bottomRight", "successfully logged in");
+        resetForm({});
+        return navigate("/");
+      })
+      .catch((err) => {
+        errorNotification(
+          "bottomRight",
+          err?.response?.data?.error || "internal error"
+        );
+      });
   };
 
   return (

@@ -23,20 +23,14 @@ const Sidebar = ({ collapsed, handleCollapse }) => {
           {
             key: "3",
             icon: <FaPen />,
-            label: "Write message",
+            label: "New message",
             onClick: ({ key }) => navigate("/new_message"),
           },
           {
             key: "1",
             icon: <RiInboxArchiveLine />,
-            label: "All messages",
+            label: "Received messages",
             onClick: ({ key }) => navigate(""),
-          },
-          {
-            key: "2",
-            icon: <AiOutlineStar />,
-            label: "Starred Messages",
-            onClick: ({ key }) => navigate("/"),
           },
         ]}
       />
